@@ -1,4 +1,9 @@
 Revision history for Perl extension Crypt::RC4.
 
+2.01 28-Nov-2001 16:12:14
+	- removed use of "our" to make Crypt::RC4 
+	  compatible with earlier versions of perl
+	- stripped ^M's out of .pm file
+
 2.0  23-Nov-2001 13:02:26
 	- added OO interface

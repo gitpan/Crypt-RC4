@@ -1,7 +1,7 @@
 #--------------------------------------------------------------------#
 # Crypt::RC4
 #       Date Written:   07-Jun-2000 04:15:55 PM
-#       Last Modified:  23-Nov-2001 01:20:31 PM
+#       Last Modified:  28-Nov-2001 04:12:14 PM
 #       Author:         Kurt Kincaid (sifukurt@yahoo.com)
 #       Copyright (c) 2001, Kurt Kincaid
 #       	All Rights Reserved.
@@ -13,47 +13,45 @@
 package Crypt::RC4;
 
 use strict;
-use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
+use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK $class $key @k @s );
 
 require Exporter;
 
 @ISA = qw(Exporter);
 @EXPORT = qw(RC4);
-$VERSION = '2.0';
-
-our ( $class, $key, @k, @s );
+$VERSION = '2.01';
 
 sub new {
     ( $class, $key )  = @_;
     my $self = bless {}, $class;
-	Setup( $key );
+    Setup( $key );
     return $self;
 }
 
 sub RC4 {
-	my ( $x, $y, $z );
-	if ( ref $_[0] ) {
-		my $self = shift;
-	} else {
-		Setup( shift );
-	}
-	for ( unpack( 'C*', shift ) ) {
-		$x = ($x + 1) % 256;
-		$y = ( $s[$x] + $y ) % 256;
-		@s[$x, $y] = @s[$y, $x];
-		$z .= pack ( 'C', $_ ^= $s[( $s[$x] + $s[$y] ) % 256] );
-	}
-	return $z;
+    my ( $x, $y, $z );
+    if ( ref $_[0] ) {
+        my $self = shift;
+    } else {
+        Setup( shift );
+    }
+    for ( unpack( 'C*', shift ) ) {
+        $x = ($x + 1) % 256;
+        $y = ( $s[$x] + $y ) % 256;
+        @s[$x, $y] = @s[$y, $x];
+        $z .= pack ( 'C', $_ ^= $s[( $s[$x] + $s[$y] ) % 256] );
+    }
+    return $z;
 }
 
 sub Setup {
     my ( $x, $y );
-	@k = unpack( 'C*', shift );
-	@s = 0..255;
-	for ($x = 0; $x != 256; $x++) {
-		$y = ( $k[$x % @k] + $s[$x] + $y ) % 256;
-		@s[$x, $y] = @s[$y, $x];
-	}
+    @k = unpack( 'C*', shift );
+    @s = 0..255;
+    for ($x = 0; $x != 256; $x++) {
+        $y = ( $k[$x % @k] + $s[$x] + $y ) % 256;
+        @s[$x, $y] = @s[$y, $x];
+    }
 }
 
 
