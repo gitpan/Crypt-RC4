@@ -7,43 +7,33 @@ require Exporter;
 
 @ISA = qw(Exporter AutoLoader);
 @EXPORT = qw(RC4);
-$VERSION = '1.0';
-
-my @s;
-my $x;
-my $y;
-
-sub Passphrase {
-	my $phrase = shift;
-	$phrase =~ s/./ord($&)/eg;
-	return sprintf( "%x", $phrase );
-}
+$VERSION = '1.1';
 
 sub RC4 {
+	my $x;
+	my $y;
+
 	my $key = shift;
-	$key = Passphrase( $key );
-	my @k = ();
-	my @t = ();
-	my @s = ();
-	my ($x, $y, $z ) = undef;
-	@k = unpack( 'C*', pack( 'H*', $key ) );
-	for ( @t=@s=0..255 ) {
-		$y = ( $k[$_%@k] + $s[$x=$_] + $y ) % 256;
-		&S
+	my @k = unpack( 'C*', $key );
+	my @s = 0..255;
+
+	for ($x = 0; $x != 256; $x++) {
+		$y = ( $k[$x % @k] + $s[$x] + $y ) % 256;
+		@s[$x, $y] = @s[$y, $x];
 	}
+
 	$x = $y = 0;
 
-	for ( unpack( 'C*', shift ) ) {
-		$x++;
-		$y = ( $s[$x%=256] + $y ) % 256;
-		&S;
-		$z .= pack ( C, $_^=$s[( $s[$x] + $s[$y] ) % 256] );
-	}
-	return $z;
-}
+	my $z = undef;
 
-sub S{
-	@s[$x,$y] = @s[$y,$x];
+	for ( unpack( 'C*', shift ) ) {
+		$x = ($x + 1) % 256;
+		$y = ( $s[$x] + $y ) % 256;
+		@s[$x, $y] = @s[$y, $x];
+		$z .= pack ( 'C', $_ ^= $s[( $s[$x] + $s[$y] ) % 256] );
+	}
+
+	return $z;
 }
 
 1;
@@ -73,10 +63,13 @@ is considered secure.
 
 Based substantially on the "RC4 in 3 lines of perl" found at http://www.cypherspace.org
 
+A major bug in v1.0 was fixed by David Hook (dgh@wumpus.com.au).  Thanks, David.
+
 =head1 AUTHOR
 
 Ronald Rivest for RSA Security, Inc.
-Kurt Kincaid (ceo@neurogames.com)
+Kurt Kincaid (sifukurt@yahoo.com)
+David Hook (dgh@wumpus.com.au)
 
 =head1 SEE ALSO
 
