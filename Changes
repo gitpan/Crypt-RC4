@@ -1,9 +1,4 @@
 Revision history for Perl extension Crypt::RC4.
 
-0.01  Fri Jun  2 13:08:43 2000
-	- original version; created by h2xs 1.19
-
-0.02 Mon Jul 17 13:13:24 EST 2000 dgh@wumpus.com.au
-    - modified to use raw pass phrase rather than apply processing
-    - modified so that it actually does RC4 (or ARC4 depending on which side of the fence you're on!)
-    - added tested vectors, removed 
+2.0  23-Nov-2001 13:02:26
+	- added OO interface
