@@ -7,11 +7,11 @@ require Exporter;
 
 @ISA = qw(Exporter AutoLoader);
 @EXPORT = qw(RC4);
-$VERSION = '1.1';
+$VERSION = '1.11';
 
 sub RC4 {
-	my $x;
-	my $y;
+	my $x = 0;
+	my $y = 0;
 
 	my $key = shift;
 	my @k = unpack( 'C*', $key );
@@ -67,8 +67,8 @@ A major bug in v1.0 was fixed by David Hook (dgh@wumpus.com.au).  Thanks, David.
 
 =head1 AUTHOR
 
-Ronald Rivest for RSA Security, Inc.
 Kurt Kincaid (sifukurt@yahoo.com)
+Ronald Rivest for RSA Security, Inc.
 David Hook (dgh@wumpus.com.au)
 
 =head1 SEE ALSO
